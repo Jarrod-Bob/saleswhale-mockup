@@ -1,51 +1,57 @@
-/**
- * Layout component that queries for data
- * with Gatsby's useStaticQuery component
- *
- * See: https://www.gatsbyjs.org/docs/use-static-query/
- */
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import clsx from 'clsx';
+import { makeStyles, useTheme } from '@material-ui/styles';
+import SideNav from './SideNav/SideNav';
+// import MiniDrawer from './components/Sidebar/components/MiniDrawer'
 
-import React from "react"
-import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
+const useStyles = makeStyles(theme => ({
+    root: {
+        // marginBottom: '-20px',
+        height: '100%',
+        // [theme.breakpoints.up('sm')]: {
+        //   paddingTop: 64
+        // }
+        // width: '100%',
+        boxSizing: "border-box"
+    },
+    shiftContent: {
+        paddingLeft: 80
+    },
+    content: {
+        height: '100%',
+        marginBottom: '-20px',
 
-import Header from "./header"
-import "./layout.css"
-
-const Layout = ({ children }) => {
-  const data = useStaticQuery(graphql`
-    query SiteTitleQuery {
-      site {
-        siteMetadata {
-          title
-        }
-      }
+    },
+    background: {
+        background: '#F1F4F8'
     }
-  `)
+}));
 
-  return (
-    <>
-      <Header siteTitle={data.site.siteMetadata.title} />
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 960,
-          padding: `0 1.0875rem 1.45rem`,
-        }}
-      >
-        <main>{children}</main>
-        <footer>
-          © {new Date().getFullYear()}, Built with
-          {` `}
-          <a href="https://www.gatsbyjs.org">Gatsby</a>
-        </footer>
-      </div>
-    </>
-  )
-}
+const Main = props => {
+    const { children } = props;
 
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-}
+    const classes = useStyles();
 
-export default Layout
+    return (
+        // <>
+        <div
+            className={clsx({
+                [classes.root]: true,
+                [classes.shiftContent]: true
+            }, classes.background)}
+        >
+            <SideNav />
+            <main className={classes.content}>
+                {children}
+            </main>
+        </div>
+        // </>
+    );
+};
+
+Main.propTypes = {
+    children: PropTypes.node
+};
+
+export default Main;
