@@ -5,8 +5,21 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import MateItem from './components/MateItem';
+import { useMediaQuery, withStyles } from '@material-ui/core';
 
-export default class ActivityFeed extends Component {
+const styles = (theme => ({
+    root: {
+      [theme.breakpoints.down('lg')]: {
+        overflowY:"auto",
+      },
+    },
+    ht: {
+      height:"100%",  
+    },
+  }));
+  
+
+class ActivityFeed extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -74,21 +87,47 @@ export default class ActivityFeed extends Component {
         prop: PropTypes
     }
 
+    addActivity(obj) {
+        if(obj != null) {
+            let id = Math.random()*1000000;
+            obj.id = id;
+            if(!this.state.activities.find(element => element.id == obj.id)) {
+                this.setState({
+                    activities: [
+                        obj,
+                        ...this.state.activities,
+                    ]
+                })
+            }
+        } 
+    }
+
+
+
     render() {
+        let activitiesArr;
+        this.addActivity(this.props.archivedObj);
+        activitiesArr = this.state["activities"];
+        const { classes } = this.props;
         return (
             <div>
-                <Paper square style={{ boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.1), 0px 0px 4px rgba(0, 0, 0, 0.05)" }}>
+                <Paper square style={{ display:"flex",flexDirection:"column", height:"calc(100vh - 300px)", boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.1), 0px 0px 4px rgba(0, 0, 0, 0.05)" }}>
                     <Typography style={{ padding: "20px", fontSize: "18px" }}>
                         Activity
                     </Typography>
                     <Divider />
-                    <div style={{padding:"20px 0"}}>
-                        {this.state["activities"].map(activity => (
+                    <div className={classes.root} style={{flexGrow:"0"}}>
+                    <div className={classes.ht} style={{padding:"20px 0"}}>
+                        {activitiesArr.map(activity => (
                             <MateItem activity={activity} />
                         ))}</div>
 
+                    </div>
+                    
                 </Paper>
             </div>
         )
     }
 }
+
+export default withStyles(styles)(ActivityFeed);

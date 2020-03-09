@@ -52,6 +52,10 @@ export default function TabsAndSearch(props) {
         props.changeTab(newValue);
     };
 
+    const handleSearch = (e) => {
+        props.handleSearch(e.target.value);
+    }
+
     return (
         // <MuiThemeProvider theme={theme}>
         <Paper square elevation={0}>
@@ -71,7 +75,7 @@ export default function TabsAndSearch(props) {
                                 </svg>
                             </Grid>
                             <Grid item>
-                                <input style={{ border: "0", fontSize: "16px", margin: "auto" }} type="text" placeholder="Search team name ..." />
+                                <input onChange={handleSearch} style={{ border: "0", fontSize: "16px", margin: "auto" }} type="text" placeholder="Search team name ..." />
                             </Grid>
                         </Grid>
                     </span>

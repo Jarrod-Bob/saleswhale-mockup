@@ -42,6 +42,12 @@ class TeamCard extends Component {
         this.props.toggleFav(id);
     }
 
+    
+    toggleArchived = (id) => () => {
+        this.props.toggleArchived(id);
+    }
+
+
     render() {
         const { team, classes } = this.props;
         return (
@@ -59,6 +65,9 @@ class TeamCard extends Component {
                             {!team.is_favorited ?
                                 <StyledRating onChange={this.toggleFav(team.id)} emptyIcon={<StarBorderRoundedIcon />} icon={<StarRoundedIcon fontSize="inherit" style={{color:"#F8CE43"}}/>} defaultValue={0} max={1} />
                                 : <StyledRating onChange={this.toggleFav(team.id)} icon={<StarRoundedIcon fontSize="inherit" style={{color:"#F8CE43"}}/>} defaultValue={1} max={1} />}
+                            {!team.is_archived ?
+                                <StyledRating onChange={this.toggleArchived(team.id)} emptyIcon={<StarBorderRoundedIcon />} icon={<StarRoundedIcon fontSize="inherit" style={{color:"#F8CE43"}}/>} defaultValue={0} max={1} />
+                                : <StyledRating onChange={this.toggleArchived(team.id)} icon={<StarRoundedIcon fontSize="inherit" style={{color:"red"}}/>} defaultValue={1} max={1} />}
                         </div>
                         <div style={{ display: "-webkit-box", fontStyle: "regular", fontSize: "14px", color: "#565656", margin: "20px", WebkitLineClamp: "2", WebkitBoxOrient: "vertical", overflow: "hidden" }}>{team.description}</div>
                         <Divider />
@@ -82,6 +91,9 @@ class TeamCard extends Component {
 
                                 <div style={{ fontStyle: "regular", fontSize: "13px", color: "#565656", opacity: "0.5" }}>Archived on {team.archived_on}</div>
                             </div>
+                            {!team.is_archived ?
+                                <StyledRating onChange={this.toggleArchived(team.id)} emptyIcon={<StarBorderRoundedIcon />} icon={<StarRoundedIcon fontSize="inherit" style={{color:"#F8CE43"}}/>} defaultValue={0} max={1} />
+                                : <StyledRating onChange={this.toggleArchived(team.id)} icon={<StarRoundedIcon fontSize="inherit" style={{color:"red"}}/>} defaultValue={1} max={1} />}
                         </div>
                         <div style={{ display: "-webkit-box", fontStyle: "regular", fontSize: "14px", color: "#565656", margin: "20px", WebkitLineClamp: "2", WebkitBoxOrient: "vertical", overflow: "hidden" }}>{team.description}</div>
                         <Divider />

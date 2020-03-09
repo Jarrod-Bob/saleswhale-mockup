@@ -90,7 +90,7 @@ export default class Header extends Component {
                         <span style={{margin:"0px 10px 0px 10px"}}>create new team</span>
                     </Button>
                 </Typography>
-                <TabsAndSearch changeTab={this.changeTab} />
+                <TabsAndSearch handleSearch={this.props.handleSearch} changeTab={this.changeTab} />
             </div>
         )
     }

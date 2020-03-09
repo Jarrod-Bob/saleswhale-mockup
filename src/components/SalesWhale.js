@@ -23,11 +23,15 @@ export default class SalesWhale extends Component {
             tab: 0,
             currentNav: null,
             open: false,
+            search: null,
+            archivedObj: null,
+            
         }
         this.changeTab = this.changeTab.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
-
+        this.handleSearch = this.handleSearch.bind(this);
+        this.addArchived = this.addArchived.bind(this);
     }
 
     static propTypes = {
@@ -36,6 +40,12 @@ export default class SalesWhale extends Component {
 
     changeTab = (value) => {
         this.setState({ tab: value });
+    }
+
+    handleSearch = (name) => {
+        this.setState({
+            search: name
+        })
     }
 
     handleOpen = (e) => {
@@ -57,24 +67,35 @@ export default class SalesWhale extends Component {
         }
     }
 
+    addArchived = (obj) => {
+        this.setState({
+            archivedObj: obj,
+        })
+    }
+
+
     render() {
         return (
             <MuiThemeProvider theme={theme}>
-                <div>
+                <div style={{height:"100vh", maxHeight:"1440px"}}>
                     <Grid container spacing={0}>
+                        <Grid item xs="12">
                         <Grid item xs="12" style={{ padding: "0 0" }}>
                             <NavBar />
                         </Grid>
                         <Grid item xs="12" style={{ padding: "0 0" }}>
-                            <Header handleOpen={this.handleOpen} changeTab={this.changeTab} />
+                            <Header handleSearch={this.handleSearch} handleOpen={this.handleOpen} changeTab={this.changeTab} />
                         </Grid>
-                        <Box style={{ margin: "40px 40px 0px 40px", width:"100%" }}>
-                            <Grid container spacing={3}>
+                        </Grid>
+                        
+                        
+                        <Box style={{ margin: "40px 40px 0px 40px", width:"100%"}}>
+                            <Grid style={{}} container spacing={3}>
                                 <Grid item md="9" xs="12">
-                                    <Content handleClose={this.handleClose} open={this.state.open} tab={this.state.tab} />
+                                    <Content addArchived={this.addArchived} search={this.state.search} handleClose={this.handleClose} open={this.state.open} tab={this.state.tab} />
                                 </Grid>
                                 <Grid item md="3" xs="12">
-                                    <ActivityFeed />
+                                    <ActivityFeed archivedObj={this.state.archivedObj} />
                                 </Grid>
                             </Grid>
                         </Box>

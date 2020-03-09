@@ -12,6 +12,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
+
 export default class Content extends Component {
     constructor(props) {
         super(props)
@@ -120,9 +121,10 @@ export default class Content extends Component {
             newEvent: {
                 name: "",
                 description: "",
-            }
+            },
         }
         this.toggleFav = this.toggleFav.bind(this)
+        this.toggleArchived = this.toggleArchived.bind(this)
         this.handleClose = this.handleClose.bind(this)
 
     }
@@ -136,6 +138,34 @@ export default class Content extends Component {
         const currState = teams;
         const fav = currState[id - 1].is_favorited;
         currState[id - 1].is_favorited = !fav;
+        this.setState({ teams: currState });
+    }
+
+    toggleArchived = (id) => {
+        const { teams } = { ...this.state };
+        const currState = teams;
+        const isArchived = currState[id - 1].is_archived;
+        currState[id - 1].is_archived = !isArchived;
+
+        let action;
+        if(!isArchived){
+            action = "archived"; 
+        } else {
+            action = "unarchived";
+        }
+
+        let obj = {
+            "id": -1,
+            "person": {
+                "id": 1,
+                "name": "Julie",
+                "avatar": "https://d1bb37ap2qun5z.cloudfront.net/profiles/profile_avatars/000/000/003/display/tamako200x200b.png?1393742139"
+            },
+            "action": action,
+            "target": currState[id - 1].name,
+            "created_at": "now",
+        }
+        this.props.addArchived(obj);
         this.setState({ teams: currState });
     }
 
@@ -187,17 +217,26 @@ export default class Content extends Component {
             }
         })
     }
+
+
+
     render() {
+        let teamsToRender;
+        if(this.props.search == null) {
+            teamsToRender = this.state["teams"];
+        } else {
+            teamsToRender = this.state["teams"].filter(team => team.name.includes(this.props.search));
+        }
         return (
             <div>
-                <Paper square style={{ marginBottom:"0px",paddingBottom: "2px", boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.1), 0px 0px 4px rgba(0, 0, 0, 0.05)" }}>
+                <Paper square style={{ height:"calc(100vh - 300px)", display:"flex",flexDirection:"column", marginBottom: "0px", paddingBottom: "0px", boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.1), 0px 0px 4px rgba(0, 0, 0, 0.05)" }}>
                     <Typography style={{ fontSize: "18px", padding: "20px 30px 20px 35px", display: "flex" }}>
                         <span>
-                            {this.props.tab == 0 ? <strong>All Teams</strong> 
-                                : this.props.tab == 1 
-                                ? <strong>Favorited Teams</strong> 
-                                    : this.props.tab == 2 
-                                    ? <strong>Archived Teams</strong> 
+                            {this.props.tab == 0 ? <strong>All Teams</strong>
+                                : this.props.tab == 1
+                                    ? <strong>Favorited Teams</strong>
+                                    : this.props.tab == 2
+                                        ? <strong>Archived Teams</strong>
                                         : null}
                         </span>
                         <span style={{ marginTop: "auto", marginBottom: "auto", marginLeft: "auto", fontSize: "14px", color: "#7F7F7F" }}>Showing&nbsp;
@@ -215,28 +254,30 @@ export default class Content extends Component {
                                         : null} teams</span>
                     </Typography>
                     <Divider />
-                    <div style={{ margin: "30px" }}>
-                        <Grid container spacing={2}>
-                            {this.state["teams"].map(team => (
-                                // {team.is_favorited == true ? }
+                    <div style={{ border:"none", flexGrow:"0",height:"100%", overflowY:"auto"}}>
+                    <div style={{  margin: "30px" }}>
+                        <Grid container spacing={2}>                        
+                            {teamsToRender.map(team => (
                                 this.props.tab == 0 ?
                                     <Grid item md="4" sm="6" xs="12">
-                                        <TeamCard team={team} toggleFav={this.toggleFav} />
+                                        <TeamCard team={team} toggleArchived={this.toggleArchived} toggleFav={this.toggleFav} />
                                     </Grid>
                                     :
                                     this.props.tab == 1 && team.is_favorited == true ?
                                         <Grid item md="4" sm="6" xs="12">
-                                            <TeamCard team={team} toggleFav={this.toggleFav} />
+                                            <TeamCard team={team} toggleArchived={this.toggleArchived} toggleFav={this.toggleFav} />
                                         </Grid>
                                         :
                                         this.props.tab == 2 && team.is_archived == true ?
                                             <Grid item md="4" sm="6" xs="12">
-                                                <TeamCard team={team} toggleFav={this.toggleFav} />
+                                                <TeamCard team={team} toggleArchived={this.toggleArchived} toggleFav={this.toggleFav} />
                                             </Grid>
                                             : null
                             ))}
 
                         </Grid>
+
+                    </div>
                     </div>
 
                 </Paper>
